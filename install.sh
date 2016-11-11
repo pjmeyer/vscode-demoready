@@ -71,16 +71,16 @@ function install {
     # Link files from repo
     echo "Linking $PROFILE to $HOME"
     echo "Linking $SETTINGS to $HOME/Library/Application\ Support/Code\ -\ Insiders/User"
-    #ln -s $PROFILE "$HOME/$PROFILE"
-    #ln -s $SETTINGS "$HOME/Library/Application\ Support/Code\ -\ Insiders/User/$SETTINGS"
-    #touch "$HOME/$HISTORY"
+    ln -s $PROFILE "$HOME/$PROFILE"
+    ln -s $SETTINGS "$HOME/Library/Application\ Support/Code\ -\ Insiders/User/$SETTINGS"
+    touch "$HOME/$HISTORY"
 
     ## if the code-insiders script doesn't exist, link the bundled one from repo
     if ! [ -e "/usr/local/bin/code-insiders" ]; then
     {
         echo "Creating VS Code shortcut..."
-        # chmod +x ./bin/code-insiders
-        # ln -s "./bin/code-insiders" "/usr/local/bin/code-insiders"
+        chmod +x ./bin/code-insiders
+        ln -s "./bin/code-insiders" "/usr/local/bin/code-insiders"
     }
     fi
 
