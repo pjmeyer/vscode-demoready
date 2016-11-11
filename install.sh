@@ -64,7 +64,7 @@ function install {
         echo "Checking ${i}..."
         if [ -e "${i}" ]; then
             echo "Removing ${i}"
-            # rm -f "${i}"
+            rm -f "${i}"
         fi
     done
 
