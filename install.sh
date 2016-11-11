@@ -19,13 +19,13 @@ function getInfo {
     # Collect docker username, project name, etc.
     echo "Before we install..."
 
-    read -r -p "Enter your user name for Docker Hub (default ${DOCKER_DEFAULT}) " DOCKER_USER
+    read -r -p "Enter your user name for Docker Hub (default: ${DOCKER_DEFAULT}) " DOCKER_USER
     [ -z "${DOCKER_USER}" ] && DOCKER_USER=${DOCKER_DEFAULT}
 
-    read -r -p "Enter the name for your Azure subscription (default ${SUB_DEFAULT}) " SUB_NAME
+    read -r -p "Enter the name for your Azure subscription (default: ${SUB_DEFAULT}) " SUB_NAME
     [ -z "${SUB_NAME}" ] && SUB_NAME=${SUB_DEFAULT}
 
-    read -r -p "Enter the name for your Azure plan and resources group (default ${PLAN_DEFAULT}) " PLAN_NAME
+    read -r -p "Enter the name for your Azure plan and resources group (default: ${PLAN_DEFAULT}) " PLAN_NAME
     [ -z "${PLAN_NAME}" ] && PLAN_NAME=${PLAN_DEFAULT}
 
     read -n 1 -r -p "WARNING: This script will replace your bash profile and VS Code Insiders settings. OK? " ok
@@ -68,6 +68,18 @@ function install {
         fi
     done
 
+    if ! [ -e "$HOME/Library/Application\ Support/Code\ -\ Insiders/User" ]; then
+    {
+        mkdir -p "$HOME/Library/Application\ Support/Code\ -\ Insiders/User"
+    }
+    fi
+
+    # Ask for the administrator password upfront
+    sudo -v
+
+    # Keep-alive: update existing `sudo` time stamp until script has finished
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
     # Link files from repo
     echo "Linking $PROFILE to $HOME"
     echo "Linking $SETTINGS to $HOME/Library/Application\ Support/Code\ -\ Insiders/User"
@@ -80,7 +92,7 @@ function install {
     {
         echo "Creating VS Code shortcut..."
         chmod +x ./bin/code-insiders
-        ln -s "./bin/code-insiders" "/usr/local/bin/code-insiders"
+        sudo ln -s "./bin/code-insiders" "/usr/local/bin/code-insiders" # This needs to be sudo
     }
     fi
 
@@ -90,11 +102,6 @@ function install {
 
     osascript -e 'tell application "System Preferences" to quit'
 
-    # Ask for the administrator password upfront
-    sudo -v
-
-    # Keep-alive: update existing `sudo` time stamp until script has finished
-    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
     # Use F-keys by default
     defaults write NSGlobalDomain com.apple.keyboard.fnState -boolean true
