@@ -1,0 +1,18 @@
+{ 
+    "files.autoSave": "afterDelay", 
+    "editor.wrappingColumn": 0, 
+    "editor.renderIndentGuides": true, 
+    "terminal.integrated.shellArgs.osx": [ 
+        "-l" 
+    ],  
+    "workbench.editor.showTabs": true, 
+    "explorer.openEditors.visible": 0, 
+    "window.reopenFolders": "none", 
+    "go.formatOnSave": false, 
+    "go.buildOnSave": true, 
+    "go.gocodeAutoBuild": true, 
+    "typescript.experimentalAutomaticTypeAcquisition": true, 
+    "typescript.check.tscVersion": false, 
+    "window.zoomLevel": 2, 
+    "workbench.editor.sideBySideLayout": "vertical" 
+} 
