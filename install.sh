@@ -68,9 +68,9 @@ function install {
         fi
     done
 
-    if ! [ -e "$HOME/Library/Application\ Support/Code\ -\ Insiders/User" ]; then
+    if ! [ -d "${HOME}/Library/Application\ Support/Code\ -\ Insiders/User" ]; then
     {
-        mkdir -p "$HOME/Library/Application\ Support/Code\ -\ Insiders/User"
+        mkdir -p "${HOME}/Library/Application\ Support/Code\ -\ Insiders/User"
     }
     fi
 
@@ -82,9 +82,9 @@ function install {
 
     # Link files from repo
     echo "Linking $PROFILE to $HOME"
+    ln -s "${PWD}/${PROFILE}" "${HOME}/${PROFILE}"
     echo "Linking $SETTINGS to $HOME/Library/Application\ Support/Code\ -\ Insiders/User"
-    ln -s $PROFILE "$HOME/$PROFILE"
-    ln -s $SETTINGS "$HOME/Library/Application\ Support/Code\ -\ Insiders/User/$SETTINGS"
+    ln -s "${PWD}/${SETTINGS}" "${HOME}/Library/Application\ Support/Code\ -\ Insiders/User/${SETTINGS}"
     touch "$HOME/$HISTORY"
 
     ## if the code-insiders script doesn't exist, link the bundled one from repo
