@@ -84,7 +84,7 @@ function install {
     echo "Linking $PROFILE to $HOME"
     ln -s "${PWD}/${PROFILE}" "${HOME}/${PROFILE}"
     echo "Linking $SETTINGS to $HOME/Library/Application\ Support/Code\ -\ Insiders/User"
-    ln -s "${PWD}/${SETTINGS}" "${HOME}/Library/Application\ Support/Code\ -\ Insiders/User/${SETTINGS}"
+    ln -s "${PWD}/${SETTINGS}" "${HOME}/Library/Application\ Support/Code\ -\ Insiders/User/${SETTINGS}" # Sometimes fails.
     touch "$HOME/$HISTORY"
 
     ## if the code-insiders script doesn't exist, link the bundled one from repo
@@ -92,7 +92,7 @@ function install {
     {
         echo "Creating VS Code shortcut..."
         chmod +x ./bin/code-insiders
-        sudo ln -s "./bin/code-insiders" "/usr/local/bin/code-insiders" # This needs to be sudo
+        sudo ln -s "${PWD}/bin/code-insiders" "/usr/local/bin/code-insiders" # This needs to be sudo
     }
     fi
 
@@ -170,12 +170,12 @@ function install {
     echo "Logging in to Azure..."
     az login
     
-    az account set --name "${SUB_NAME}"
-    az resource group create -l westus -n "${PROJECTNAME}"-rg
-    az appservice plan create -n "${PROJECTNAME}"-plan -g "${PROJECTNAME}"-rg --sku S3 --is-linux -l westus 
+    # az account set --subscription "${SUB_NAME}"
+    # az resource group create -l westus -n "${PROJECTNAME}"-rg
+    # az appservice plan create -n "${PROJECTNAME}"-plan -g "${PROJECTNAME}"-rg --sku S3 --is-linux -l westus 
 
     # Pre-pull the docker image
-    docker pull alpine-node
+    docker pull mhart/alpine-node
 
     echo "Done! Remember to log in to Docker (docker login)."
     echo "You'll also need to reboot for some macOS settings to take effect."
