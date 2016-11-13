@@ -17,5 +17,15 @@ alias cd..='cd ..'
 alias dir='ls -l' 
 alias ..='cd ..' 
 
+# Override docker commands with our own formatting string
+function docker() {
+    if [ $# -eq 1 ] && [[ "$1" == "images" ]]; then {
+        /usr/local/bin/docker images --filter "dangling=false"
+    } else {
+        /usr/local/bin/docker "$@";
+    }
+    fi
+}
+
 # Custom prompt
 export PS1='\[\033[1;94m\]\w$\[\033[0m\] ' 
