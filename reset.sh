@@ -12,7 +12,7 @@
 ### Teardown ###
 
 # Kill mongo if running
-pgrep mongod | xargs kill
+#pgrep mongod | xargs kill
 
 # Kill VS Code if running
 osascript -e 'tell application "Code - Insiders" to quit'
@@ -24,13 +24,14 @@ osascript -e 'tell application "Code - Insiders" to quit'
 #mongo -u <user> -p <pass> --norc <URLtoDB:PORT/FOO> <.js file that runs commands> 
 
 # Remove the appservice
-#az appservice web remove -g "${PLAN_NAME}-rg" -n "${APP_NAME}" --plan "${PLAN_NAME}-plan"
+az appservice web delete -g "${PLAN_NAME}-rg" -n "${APP_NAME}"
 
 # Delete docker extension
 rm -rf "${HOME}/.vscode-insiders/extensions/PeterJausovec.vscode-docker*"
 
 # Delete VS Code
-rm -rf "${HOME}/Downloads/Visual Studio Code - Insiders"
+rm -rf "${HOME}/Downloads/Visual Studio Code - Insiders.app"
+rm -rf "${HOME}/Downloads/VSCode-darwin-insider.zip"
 
 
 ### Reset ###
@@ -39,12 +40,13 @@ rm -rf "${HOME}/Downloads/Visual Studio Code - Insiders"
 docker pull alpine-node
 
 # Start mongo
-mongod --config /usr/local/etc/mongod.conf &
+#mongod --config /usr/local/etc/mongod.conf &
+brew services restart mongodb
 
 # Load az commands into history
-history -s "az appservice web browse -g ${PLAN_NAME}-rg -n ${APP_NAME}"
-history -s "az appservice web config container update -g ${PLAN_NAME}-rg -n ${APP_NAME} --docker-custom-image-name ${DOCKER_USER}/node-todo:latest" 
-history -s "az appservice web create -g ${PLAN_NAME}-rg -n ${APP_NAME} --plan ${PLAN_NAME}-plan" 
+# history -s "az appservice web browse -g ${PLAN_NAME}-rg -n ${APP_NAME}"
+# history -s "az appservice web config container update -g ${PLAN_NAME}-rg -n ${APP_NAME} --docker-custom-image-name ${DOCKER_USER}/node-todo:latest" 
+# history -s "az appservice web create -g ${PLAN_NAME}-rg -n ${APP_NAME} --plan ${PLAN_NAME}-plan" 
 
 # Load commands into snippets.txt
 
