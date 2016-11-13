@@ -1,0 +1,12 @@
+mongoose.connection.on('error', console.error.bind('connection error!'));
+ 
+ 
+az appservice web create -g node-todo-group -n node-todo-app --plan node-todo-linux-vm
+ 
+ 
+ 
+az appservice web config container update -n node-todo-app -g node-todo-group --docker-custom-image-name chrisdias/node-todo:latest
+ 
+ 
+ 
+az appservice web browse -g node-todo-group -n node-todo-app
