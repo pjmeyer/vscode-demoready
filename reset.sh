@@ -30,14 +30,14 @@ az appservice web delete -g "${PLAN_NAME}-rg" -n "${APP_NAME}"
 rm -rf "${HOME}/.vscode-insiders/extensions/PeterJausovec.vscode-docker*"
 
 # Delete VS Code
-rm -rf "${HOME}/Downloads/Visual Studio Code - Insiders.app"
-rm -rf "${HOME}/Downloads/VSCode-darwin-insider.zip"
+rm -rfv "${HOME}/Downloads/Visual Studio Code - Insiders.app"
+rm -rfv "${HOME}/Downloads/VSCode-darwin-insider.zip"
 
 
 ### Reset ###
 
 # Pull the latest docker image
-docker pull alpine-node
+docker pull mhart/alpine-node
 
 # Start mongo
 #mongod --config /usr/local/etc/mongod.conf &
