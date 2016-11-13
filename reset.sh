@@ -33,6 +33,8 @@ rm -rf "${HOME}/.vscode-insiders/extensions/PeterJausovec.vscode-docker*"
 rm -rfv "${HOME}/Downloads/Visual Studio Code - Insiders.app"
 rm -rfv "${HOME}/Downloads/VSCode-darwin-insider.zip"
 
+# Delete directory
+rm -rfv "${HOME}/src/*"
 
 ### Reset ###
 
