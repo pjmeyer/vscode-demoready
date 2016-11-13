@@ -27,7 +27,7 @@ osascript -e 'tell application "Code - Insiders" to quit'
 az appservice web delete -g "${PLAN_NAME}-rg" -n "${APP_NAME}"
 
 # Delete docker extension
-rm -rf "${HOME}/.vscode-insiders/extensions/PeterJausovec.vscode-docker*"
+rm -rf "${HOME}/.vscode-insiders/extensions/*"
 
 # Delete VS Code
 rm -rf "${HOME}/Downloads/Visual Studio Code - Insiders.app"
