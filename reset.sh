@@ -30,11 +30,11 @@ az appservice web delete -g "${PLAN_NAME}-rg" -n "${APP_NAME}"
 rm -rf "${HOME}/.vscode-insiders/extensions/PeterJausovec.vscode-docker*"
 
 # Delete VS Code
-rm -rfv "${HOME}/Downloads/Visual Studio Code - Insiders.app"
-rm -rfv "${HOME}/Downloads/VSCode-darwin-insider.zip"
+rm -rf "${HOME}/Downloads/Visual Studio Code - Insiders.app"
+rm -rf "${HOME}/Downloads/VSCode-darwin-insider.zip"
 
 # Delete directory
-rm -rfv "${HOME}/src/*"
+rm -rf "${HOME}/src/*"
 
 ### Reset ###
 
