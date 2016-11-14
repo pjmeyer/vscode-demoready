@@ -17,14 +17,11 @@
 # Kill VS Code if running
 osascript -e 'tell application "Code - Insiders" to quit'
 
-# Remove the image we built during the demo
-# docker rmi "${DOCKER_USER}/node-todo"
 
-# Clean out the documentDb
-#mongo -u <user> -p <pass> --norc <URLtoDB:PORT/FOO> <.js file that runs commands> 
-
-# Remove the appservice
-az appservice web delete -g "${PLAN_NAME}-rg" -n "${APP_NAME}"
+# Remove the appservice (deprecated)
+# We now reset by going into the azure portal, clearing the container variable,
+# then restarting the app service.
+#az appservice web delete -g "${PLAN_NAME}-rg" -n "${APP_NAME}"
 
 # Delete docker extension
 rm -rf "${HOME}/.vscode-insiders/extensions/PeterJausovec.vscode-docker-0.0.7"
@@ -45,12 +42,11 @@ docker pull mhart/alpine-node
 #mongod --config /usr/local/etc/mongod.conf &
 brew services restart mongodb
 
-# Load az commands into history
+# Load az commands into history (deprecated)
+# We now only run two of these, and they'll be copy/pasted.
 # history -s "az appservice web browse -g ${PLAN_NAME}-rg -n ${APP_NAME}"
 # history -s "az appservice web config container update -g ${PLAN_NAME}-rg -n ${APP_NAME} --docker-custom-image-name ${DOCKER_USER}/node-todo:latest" 
 # history -s "az appservice web create -g ${PLAN_NAME}-rg -n ${APP_NAME} --plan ${PLAN_NAME}-plan" 
-
-# Load commands into snippets.txt
 
 
 echo "Demo reset."
