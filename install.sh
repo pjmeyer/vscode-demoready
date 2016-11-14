@@ -5,28 +5,26 @@
 ############################
 
 # Environment Variables
-DOCKER_DEFAULT="chrisdias"
+DOCKER_DEFAULT=""
 SUB_DEFAULT="CADD Connect 2016 Demos"
 PLAN_DEFAULT="node-todo-connect2016"
 
-
 PROFILE=".bash_profile"
-HISTORY=".bash_history"
 SETTINGS="settings.json"
 
 function getInfo {
 
     # Collect docker username, project name, etc.
-    echo "Before we install..."
+    # echo "Before we install..."
 
-    read -r -p "Enter your user name for Docker Hub (default: ${DOCKER_DEFAULT}) " DOCKER_USER
-    [ -z "${DOCKER_USER}" ] && DOCKER_USER=${DOCKER_DEFAULT}
+    # read -r -p "Enter your user name for Docker Hub (default: ${DOCKER_DEFAULT}) " DOCKER_USER
+    # [ -z "${DOCKER_USER}" ] && DOCKER_USER=${DOCKER_DEFAULT}
 
-    read -r -p "Enter the name for your Azure subscription (default: ${SUB_DEFAULT}) " SUB_NAME
-    [ -z "${SUB_NAME}" ] && SUB_NAME=${SUB_DEFAULT}
+    # read -r -p "Enter the name for your Azure subscription (default: ${SUB_DEFAULT}) " SUB_NAME
+    # [ -z "${SUB_NAME}" ] && SUB_NAME=${SUB_DEFAULT}
 
-    read -r -p "Enter the name for your Azure plan and resources group (default: ${PLAN_DEFAULT}) " PLAN_NAME
-    [ -z "${PLAN_NAME}" ] && PLAN_NAME=${PLAN_DEFAULT}
+    # read -r -p "Enter the name for your Azure plan and resources group (default: ${PLAN_DEFAULT}) " PLAN_NAME
+    # [ -z "${PLAN_NAME}" ] && PLAN_NAME=${PLAN_DEFAULT}
 
     read -n 1 -r -p "WARNING: This script will replace your bash profile and VS Code Insiders settings. OK? " ok
     
@@ -36,13 +34,6 @@ function getInfo {
         * ) exit 0 ;;
     esac
 
-    # Add vars into bash profile (for export). Default app name == plan name.
-    # echo "export DOCKER_USER=${DOCKER_USER}" >> "${HOME}/.bash_profile"
-    # echo "export PLAN_NAME=${PLAN_NAME}" >> "${HOME}/.bash_profile"
-    # echo "export APP_NAME=${PLAN_NAME}" >> "${HOME}/.bash_profile"
-    sed -i '' "s/<docker>/${DOCKER_USER}/" "${HOME}/.bash_profile"
-    sed -i '' "s/<plan>/${PLAN_NAME}/" "${HOME}/.bash_profile"
-    sed -i '' "s/<app>/${PLAN_NAME}/" "${HOME}/.bash_profile"
 }
 
 function install {
@@ -55,21 +46,18 @@ function install {
     }
     fi
 
-    # Create bash profile, history, settings.json if they don't exist.
-
-    declare -a files=("$HOME/$PROFILE" "$HOME/$HISTORY" "$HOME/Library/Application\ Support/Code\ -\ Insiders/User/$SETTINGS")
-
-    for i in "${files[@]}"
-    do
-        echo "Checking ${i}..."
-        if [ -e "${i}" ]; then
-            echo "Removing ${i}"
-            rm -f "${i}"
-        fi
+    for app in "cfprefsd" "Dock" "Docker" "Finder" "mongod" "SystemUIServer" "Terminal"; do
+	killall "${app}" &> /dev/null
     done
 
-    if ! [ -d "${HOME}/Library/Application\ Support/Code\ -\ Insiders/User" ]; then
+    # Recreate bash profile, history, settings.json.
+    rm -f "$HOME/$PROFILE"
+    rm -f "$HOME/.bash_history"
+
+    if [ -d "${HOME}/Library/Application\ Support/Code\ -\ Insiders/User" ]; then
     {
+        rm -f "$HOME/Library/Application\ Support/Code\ -\ Insiders/User/$SETTINGS"
+    } else {
         mkdir -p "${HOME}/Library/Application\ Support/Code\ -\ Insiders/User"
     }
     fi
@@ -85,6 +73,7 @@ function install {
     ln -s "${PWD}/${PROFILE}" "${HOME}/${PROFILE}"
     echo "Linking $SETTINGS to $HOME/Library/Application\ Support/Code\ -\ Insiders/User"
     ln -s "${PWD}/${SETTINGS}" "${HOME}/Library/Application\ Support/Code\ -\ Insiders/User/${SETTINGS}" # Sometimes fails.
+    ln -s "${PWD}/.inputrc" "${HOME}/.inputrc"
     touch "$HOME/$HISTORY"
 
     ## if the code-insiders script doesn't exist, link the bundled one from repo
@@ -154,30 +143,28 @@ function install {
     brew cask install google-chrome
     brew cask install docker
 
-    # Start docker
-    /Applications/Docker.app/Contents/MacOS/Docker &
-
-    # Update Python and install AzureCLI
+    # Update Python and install AzureCLI (if not installed)
     pip3 install -U pip
-    pip install --pre azure-cli --extra-index-url https://azureclinightly.blob.core.windows.net/packages
-    export AZURE_COMPONENT_PACKAGE_INDEX_URL=https://azureclinightly.blob.core.windows.net/packages
-    # Modify `az` command to call Python3
-    sed -i '' 's/^python /python3 /' /usr/local/bin/az
+    if [ ! -e /usr/local/bin/az ]; then
+    {
+        pip install --pre azure-cli --extra-index-url https://azureclinightly.blob.core.windows.net/packages
+        export AZURE_COMPONENT_PACKAGE_INDEX_URL=https://azureclinightly.blob.core.windows.net/packages
+        # Modify `az` command to call Python3
+        sed -i '' 's/^python /python3 /' /usr/local/bin/az
 
-    # /usr/local/bin/az component update --add webapp –-private
+        # No longer needed, component now installed by default
+        # /usr/local/bin/az component update --add webapp –-private
+    }
+    fi
 
-    # Create Azure assets
-    echo "Logging in to Azure..."
-    az login
-    
-    # az account set --subscription "${SUB_NAME}"
-    # az resource group create -l westus -n "${PROJECTNAME}"-rg
-    # az appservice plan create -n "${PROJECTNAME}"-plan -g "${PROJECTNAME}"-rg --sku S3 --is-linux -l westus 
+    # Push variables to bash profile
+    # Default app name == plan name.
+    # sed -i '' "s/<docker>/${DOCKER_USER}/" "${HOME}/.bash_profile"
+    # sed -i '' "s/<plan>/${PLAN_NAME}/" "${HOME}/.bash_profile"
+    # sed -i '' "s/<app>/${PLAN_NAME}/" "${HOME}/.bash_profile"
 
-    # Pre-pull the docker image
-    docker pull mhart/alpine-node
-
-    echo "Done! Remember to log in to Docker (docker login)."
+    echo "Done!"
+    echo "Change the variables in your .bash_profile for your specific machine."
     echo "You'll also need to reboot for some macOS settings to take effect."
 }
 
